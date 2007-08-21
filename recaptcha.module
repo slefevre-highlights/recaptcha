@@ -60,6 +60,7 @@ function recaptcha_perm() {
  * Implementation of admin settings().
  */
 function recaptcha_admin_settings() {
+  require_once('recaptcha.inc');
   global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
   @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
   $form = array();
