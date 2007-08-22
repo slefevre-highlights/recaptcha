@@ -185,6 +185,7 @@ function recaptcha_captcha() {
         $result['form']['captcha_challenge'] = array (
           '#type' => 'item',
           '#description' => recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection),
+          '#required' => TRUE,
         );
       }
       return $result;
