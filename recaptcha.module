@@ -132,13 +132,22 @@ function recaptcha_admin_settings() {
     '#type' => 'textfield',
     '#title' => t('Tab Index'),
     '#description' => t('Sets a <a href="@tabindex" target="_blank">tabindex</a> for the reCAPTCHA text box. If other elements in the form use a tabindex, this should be set so that navigation is easier for the user.', array('@tabindex' => 'http://www.w3.org/TR/html4/interact/forms.html#adef-tabindex')),
-    '#default_value' => variable_get('recaptcha_tabindex', 0),
-    '#required' => TRUE,
+    '#default_value' => variable_get('recaptcha_tabindex', ''),
     '#size' => 4,
   );
 
   return system_settings_form($form);
 } // function recaptcha_admin_settings
+
+/**
+ * The validation on the reCAPTCHA administration settings
+ */
+function recaptcha_admin_settings_validate ($form_id, $form_values) {
+  $tabindex = $form_values['recaptcha_tabindex'];
+  if (!empty($tabindex) && !is_numeric($tabindex)) {
+    form_set_error('recaptcha_tabindex', t('The Tab Index must be an integer.'));
+  }
+}
 
 /**
  * reCAPTCHA implementation of hook_captcha
@@ -149,7 +158,7 @@ function recaptcha_captcha() {
   switch($op) {
     case 'list':
       return array('reCAPTCHA');
-      
+
     case 'generate':
       $captcha_type = array_shift($args);
       $result = array();
@@ -171,14 +180,18 @@ function recaptcha_captcha() {
         $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', isset($recaptcha_api_secure_server) ? $recaptcha_api_secure_server : 'https://api-secure.recaptcha.net');
         $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
-        $recaptcha_tabindex = variable_get('recaptcha_tabindex', 0);
+        $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
         $recaptcha_public_key = variable_get('recaptcha_public_key', '');
         
         // Create the form
         drupal_add_css(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
         if (!isset($jsadded)) { // only display the javascript once.
           $jsadded = TRUE;
-          drupal_add_js("var RecaptchaOptions = {theme : '$recaptcha_theme', tabindex : $recaptcha_tabindex};", 'inline');
+          $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
+          if (!empty($recaptcha_tabindex)) {
+            $js .= ', tabindex : '. $recaptcha_tabindex;
+          }
+          drupal_add_js($js .'};', 'inline');
         }
         $result['preprocess'] = TRUE; // tell captcha to preprocess the form
         $result['solution'] = TRUE;   // require TRUE to be returned
