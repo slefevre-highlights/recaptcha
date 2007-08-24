@@ -61,7 +61,6 @@ function recaptcha_perm() {
  */
 function recaptcha_admin_settings() {
   require_once('recaptcha.inc');
-  global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server;
   @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
   $form = array();
   $form['recaptcha_public_key'] = array(
@@ -77,39 +76,13 @@ function recaptcha_admin_settings() {
     '#default_value' => variable_get('recaptcha_private_key', ''),
     '#maxlength' => 40,
     '#description' => t('The private key given to you when you <a href="@url" target="_blank">registered at reCAPTCHA.net</a>.', array('@url' => url(recaptcha_get_signup_url($_SERVER['SERVER_NAME'], variable_get('site_name', ''))))),
-   );
-   
-  $form['recaptcha_server_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Server Settings'),
-    '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
   );
-  $form['recaptcha_server_settings']['recaptcha_api_server'] = array(
-    '#type' => 'textfield',
-    '#title' => t('API Server'),
-    '#default_value' => variable_get('recaptcha_api_server', isset($recaptcha_api_server) ? $recaptcha_api_server : 'http://api.recaptcha.net'),
-    '#description' => t('The reCAPTCHA API Server to connect to.'),
-  );
-  $form['recaptcha_server_settings']['recaptcha_secure_connection'] = array(
+  $form['recaptcha_secure_connection'] = array(
     '#type' => 'checkbox',
     '#title' => t('Secure Connection'),
     '#default_value' => variable_get('recaptcha_secure_connection', FALSE),
     '#description' => t('Connect to the reCAPTCHA server using a secure connection.'),
   );
-  $form['recaptcha_server_settings']['recaptcha_api_secure_server'] = array(
-    '#type' => 'textfield',
-    '#title' => t('API Secure Server'),
-    '#default_value' => variable_get('recaptcha_api_secure_server', isset($recaptcha_api_secure_server) ? $recaptcha_api_secure_server : 'https://api-secure.recaptcha.net'),
-    '#description' => t('The secure reCAPTCHA API Server to connect to when using a secure connection.'),
-  );
-  $form['recaptcha_server_settings']['recaptcha_verify_server'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Verify Server'),
-    '#default_value' => variable_get('recaptcha_verify_server', isset($recaptcha_verify_server) ? $recaptcha_verify_server : 'api-verify.recaptcha.net'),
-    '#description' => t('The server to use to verify the information.'),
-  );
-  
   $form['recaptcha_theme_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Theme Settings'),
@@ -164,20 +137,17 @@ function recaptcha_captcha() {
       $result = array();
       if($captcha_type == "reCAPTCHA") {
         require_once('recaptcha.inc');
-        global $recaptcha_api_server, $recaptcha_api_secure_server, $recaptcha_verify_server, $jsadded;
+        global $jsadded;
         @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
         
         // Check if reCAPTCHA is available and show Math if not
-        $recaptcha_verify_server = variable_get('recaptcha_verify_server', isset($recaptcha_verify_server) ? $recaptcha_verify_server : 'api-verify.recaptcha.net');
-        $connect = @fsockopen($recaptcha_verify_server, 80);
+        $connect = @fsockopen(RECAPTCHA_VERIFY_SERVER, 80);
         if (!$connect) {
           return captcha_captcha('generate', 'Math', $args);
         }
         fclose($connect); // close connection
         
         // Retrieve configuration variables from database
-        $recaptcha_api_server = variable_get('recaptcha_api_server', isset($recaptcha_api_server) ? $recaptcha_api_server : 'http://api.recaptcha.net');
-        $recaptcha_api_secure_server = variable_get('recaptcha_api_secure_server', isset($recaptcha_api_secure_server) ? $recaptcha_api_secure_server : 'https://api-secure.recaptcha.net');
         $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
