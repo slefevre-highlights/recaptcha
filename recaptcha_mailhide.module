@@ -62,7 +62,7 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
 
     case 'process':
       require_once('recaptcha.inc');
-      global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key;
+      global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $recaptcha_mailhide_nokey_warn;
       @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
       $recaptcha_mailhide_public_key = variable_get('recaptcha_mailhide_public_key', '');
       $recaptcha_mailhide_private_key = variable_get('recaptcha_mailhide_private_key', '');
@@ -73,6 +73,7 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
       
       unset($recaptcha_mailhide_public_key);
       unset($recaptcha_mailhide_private_key);
+      unset($recaptcha_mailhide_nokey_warn);
       return $text;
 
     default:
@@ -91,7 +92,17 @@ function recaptcha_mailhide_filter_tips($delta, $format, $long = false) {
  * Private reCAPTCHA function to replace an email regex match
  */ 
 function _recaptcha_replace($match) {
-  global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key;
-  $email = recaptcha_mailhide_html($recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $match[2]);
+  global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $recaptcha_mailhide_nokey_warn;
+  // recaptchalib will die if we invoke without setting the keys. Fail gracefully in this case.
+  if (empty($recaptcha_mailhide_public_key) || empty($recaptcha_mailhide_private_key)) {
+    if ($recaptcha_mailhide_nokey_warn != TRUE) {
+      drupal_set_message(t('Addresses cannot be hidden because the administrator has not set the reCAPTCHA Mailhide keys.'), 'error');
+      $recaptcha_mailhide_nokey_warn = TRUE;
+    }
+    $email = $match[2];
+  }
+  else {
+    $email = recaptcha_mailhide_html($recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $match[2]);
+  }
   return $match[1] . $email . $match[3];
 }
