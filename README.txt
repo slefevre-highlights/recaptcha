@@ -98,6 +98,7 @@ CHANGELOG
 August 27, 2007
  - #169996: Move mailhide keys to settings form?
  - Patch #170012 by kthagen: Enabling mailhide without setting keys
+ - #170205: Coder Module Review
 
 August 24, 2007
  - Patch #170006 by kthagen: Remove global variables

@@ -16,11 +16,11 @@ function recaptcha_mailhide_help($section = '') {
       $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to protect email addresses.', array('@url' => url('http://www.recaptcha.net')));
       break;
     case 'admin/help#recaptcha':
-      $output .= '<p>' .
+      $output .= '<p>'.
         t('Uses the reCAPTCHA web service to protect email addresses. For more information on what reCAPTCHA Mailhide is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://mailhide.recaptcha.net'))) .
-        '</p><h3>' .
+        '</p><h3>'.
         t('Configuration') .
-        '</h3><p>' .
+        '</h3><p>'.
         t('Head over to the <a href="@inputformats">input format settings</a> and add the <a href="@url" target="_blank">reCAPTCHA Mailhide</a> input filter to hide posted emails.', array('@inputformats' => url('admin/settings/filters'), '@url' => url('http://mailhide.recaptcha.net'))) .
         '</p>';
       break;
@@ -62,18 +62,18 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
 
     case 'process':
       require_once('recaptcha.inc');
-      global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $recaptcha_mailhide_nokey_warn;
+      global $_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $_recaptcha_mailhide_nokey_warn;
       @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
-      $recaptcha_mailhide_public_key = variable_get('recaptcha_mailhide_public_key', '');
-      $recaptcha_mailhide_private_key = variable_get('recaptcha_mailhide_private_key', '');
-      
-      $text   = ' ' . $text . ' ';
+      $_recaptcha_mailhide_public_key = variable_get('recaptcha_mailhide_public_key', '');
+      $_recaptcha_mailhide_private_key = variable_get('recaptcha_mailhide_private_key', '');
+
+      $text   = ' '. $text .' ';
       $text = preg_replace_callback("!(<p>|<li>|<br\s*/?>|[ \n\r\t\(])([A-Za-z0-9._-]+@[A-Za-z0-9._+-]+\.[A-Za-z]{2,4})([.,?]?)(?=(</p>|</li>|<br\s*/?>|[ \n\r\t\)]))!i", '_recaptcha_replace', $text);
       $text = substr($text, 1, -1);
       
-      unset($recaptcha_mailhide_public_key);
-      unset($recaptcha_mailhide_private_key);
-      unset($recaptcha_mailhide_nokey_warn);
+      unset($_recaptcha_mailhide_public_key);
+      unset($_recaptcha_mailhide_private_key);
+      unset($_recaptcha_mailhide_nokey_warn);
       return $text;
 
     default:
@@ -92,17 +92,17 @@ function recaptcha_mailhide_filter_tips($delta, $format, $long = false) {
  * Private reCAPTCHA function to replace an email regex match
  */ 
 function _recaptcha_replace($match) {
-  global $recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $recaptcha_mailhide_nokey_warn;
+  global $_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $_recaptcha_mailhide_nokey_warn;
   // recaptchalib will die if we invoke without setting the keys. Fail gracefully in this case.
-  if (empty($recaptcha_mailhide_public_key) || empty($recaptcha_mailhide_private_key)) {
-    if ($recaptcha_mailhide_nokey_warn != TRUE) {
+  if (empty($_recaptcha_mailhide_public_key) || empty($_recaptcha_mailhide_private_key)) {
+    if ($_recaptcha_mailhide_nokey_warn != TRUE) {
       drupal_set_message(t('Addresses cannot be hidden because the administrator has not set the reCAPTCHA Mailhide keys.'), 'error');
-      $recaptcha_mailhide_nokey_warn = TRUE;
+      $_recaptcha_mailhide_nokey_warn = TRUE;
     }
     $email = $match[2];
   }
   else {
-    $email = recaptcha_mailhide_html($recaptcha_mailhide_public_key, $recaptcha_mailhide_private_key, $match[2]);
+    $email = recaptcha_mailhide_html($_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $match[2]);
   }
   return $match[1] . $email . $match[3];
 }

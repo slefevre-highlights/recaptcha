@@ -17,11 +17,11 @@ function recaptcha_help($section = '') {
       $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('http://www.recaptcha.net')));
       break;
     case 'admin/help#recaptcha':
-      $output .= '<p>' .
+      $output .= '<p>'.
         t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.recaptcha.net'))) .
-        '</p><h3>' .
+        '</p><h3>'.
         t('Configuration') .
-        '</h3><p>' .
+        '</h3><p>'.
         t('The settings associated with reCAPTCHA can be found in the <a href="@recaptchatab">reCAPTCHA tab</a>, in the <a href="@captchasettings">CAPTCHA settings</a>. You must set your public and private reCAPTCHA keys in order to use the module. Once the public and private keys are set, visit the <a href="@captchasettings">CAPTCHA settings</a>, where you can choose where reCAPTCHA should be displayed.', array('@recaptchatab' => url('admin/user/captcha/recaptcha'), '@captchasettings' => url('admin/user/captcha'))) .
         '</p>';
       break;
@@ -115,7 +115,7 @@ function recaptcha_admin_settings() {
 /**
  * The validation on the reCAPTCHA administration settings
  */
-function recaptcha_admin_settings_validate ($form_id, $form_values) {
+function recaptcha_admin_settings_validate($form_id, $form_values) {
   $tabindex = $form_values['recaptcha_tabindex'];
   if (!empty($tabindex) && !is_numeric($tabindex)) {
     form_set_error('recaptcha_tabindex', t('The Tab Index must be an integer.'));
@@ -128,18 +128,18 @@ function recaptcha_admin_settings_validate ($form_id, $form_values) {
 function recaptcha_captcha() {  
   $args = func_get_args();
   $op = array_shift($args); 
-  switch($op) {
+  switch ($op) {
     case 'list':
       return array('reCAPTCHA');
 
     case 'generate':
       $captcha_type = array_shift($args);
       $result = array();
-      if($captcha_type == "reCAPTCHA") {
+      if ($captcha_type == 'reCAPTCHA') {
         require_once('recaptcha.inc');
-        global $jsadded;
+        global $_recaptcha_jsadded;
         @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
-        
+
         // Check if reCAPTCHA is available and show Math if not
         $connect = @fsockopen(RECAPTCHA_VERIFY_SERVER, 80);
         if (!$connect) {
@@ -154,9 +154,9 @@ function recaptcha_captcha() {
         $recaptcha_public_key = variable_get('recaptcha_public_key', '');
         
         // Create the form
-        drupal_add_css(drupal_get_path('module', 'recaptcha') . '/recaptcha.css');
-        if (!isset($jsadded)) { // only display the javascript once.
-          $jsadded = TRUE;
+        drupal_add_css(drupal_get_path('module', 'recaptcha') .'/recaptcha.css');
+        if (!isset($_recaptcha_jsadded)) { // only display the javascript once.
+          $_recaptcha_jsadded = TRUE;
           $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
           if (!empty($recaptcha_tabindex)) {
             $js .= ', tabindex : '. $recaptcha_tabindex;
@@ -165,7 +165,7 @@ function recaptcha_captcha() {
         }
         $result['preprocess'] = TRUE; // tell captcha to preprocess the form
         $result['solution'] = TRUE;   // require TRUE to be returned
-        $result['form']['captcha_challenge'] = array (
+        $result['form']['captcha_challenge'] = array(
           '#type' => 'item',
           '#description' => recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection),
           '#required' => TRUE,
@@ -183,7 +183,8 @@ function recaptcha_captcha() {
         $_POST['recaptcha_response_field']);
       if ($resp->is_valid) {
         return TRUE;
-      } else {
+      }
+      else {
         form_set_error('captcha_response', t('The reCAPTCHA code you entered was incorrect.'));
         return FALSE;
       }
