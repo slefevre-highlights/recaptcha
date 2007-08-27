@@ -18,7 +18,7 @@ INSTALLATION
 2. Download the reCAPTCHA PHP Library from: 
        http://recaptcha.net/plugins/php
 
-3. Extract the files to: modules/recaptcha/recaptcha
+3. Extract the library files to: modules/recaptcha/recaptcha
    So that recaptchalib.php is available at:
        modules/recaptcha/recaptcha/recaptchalib.php
 
@@ -26,7 +26,7 @@ INSTALLATION
 CONFIGURATION
 -------------
    
-1. Enable both the reCAPTCHA and CAPTCHA modules in:
+1. Enable reCAPTCHA and CAPTCHA modules in:
        admin/build/modules
    Note: The reCAPTCHA module requires at least Captcha
          version 3.x
@@ -54,17 +54,20 @@ protect email addresses. This, of course, is optional to
 use and is only there if you want it. The following is how
 you use that input filter:
 
-1. Head over to your input format settings:
+1. Enable the reCAPTCHA Mailhide module:
+       admin/build/modules
+
+2. Head over to your input format settings:
        admin/settings/filters
 
-2. Edit your default input format and add the reCAPTCHA
+3. Edit your default input format and add the reCAPTCHA
    Mailhide filter.
    
-3. Click on the Configure tab and put in a public and
+4. Click on the Configure tab and put in a public and
    private Mailhide key obtained from:
        http://mailhide.recaptcha.net/apikey
 
-4. Use the Rearrange tab to rearrange the weight of the
+5. Use the Rearrange tab to rearrange the weight of the
    filter depending on what filters already exist.
 
 Note: You will require the installation of the mcrypt
@@ -91,6 +94,32 @@ it so multi-domain systems are capable.
 
 CHANGELOG
 ---------
+
+August 27, 2007
+ - #169996: Move mailhide keys to settings form?
+
+August 24, 2007
+ - Patch #170006 by kthagen: Remove global variables
+ 
+August 23, 2007
+ - #168496: reCAPTCHA Themes - Tab Index optional
+
+August 22, 2007
+ - #169295 by kthagen: 5.x-2.1 captchas are silently ignored
+ 
+August 21, 2007
+ - Small .inc bug fix
+ - #148079: Roll back to different captcha if recaptcha.net is unavailable
+ 
+August 20, 2007
+ - Info file fixes
+
+August 19, 2007
+ - #168496: reCAPTCHA Themes
+ - #154215: Upgrade to latest version of Captcha
+ 
+August 10, 2007
+ - Patch #165514 by kthagen: Small usability requests
 
 July 20, 2007 - Version 2.0
  - Update to the Captcha release 3.x
