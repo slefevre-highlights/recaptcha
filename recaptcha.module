@@ -2,6 +2,11 @@
 /* $Id$ */
 
 /**
+ * @file
+ * Uses the reCAPTCHA web service to improve the CAPTCHA system.
+ */
+
+/**
 * Display help and module information
 * @param section which section of the site we're displaying help
 * @return help text for section

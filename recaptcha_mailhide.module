@@ -2,6 +2,11 @@
 /* $Id$ */
 
 /**
+ * @file
+ * Protects email addresses using the reCAPTCHA web service.
+ */
+
+/**
 * Display help and module information
 * @param section which section of the site we're displaying help
 * @return help text for section

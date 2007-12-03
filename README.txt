@@ -68,7 +68,8 @@ you use that input filter:
        http://mailhide.recaptcha.net/apikey
 
 5. Use the Rearrange tab to rearrange the weight of the
-   filter depending on what filters already exist.
+   filter depending on what filters already exist.  Make
+   sure it is before the URL Filter.
 
 Note: You will require the installation of the mcrypt
       PHP module in your web server for Mailhide to work:
@@ -95,82 +96,7 @@ it so multi-domain systems are capable.
 CHANGELOG
 ---------
 
-August 27, 2007
- - #169996: Move mailhide keys to settings form?
- - Patch #170012 by kthagen: Enabling mailhide without setting keys
- - #170205: Coder Module Review
-
-August 24, 2007
- - Patch #170006 by kthagen: Remove global variables
- 
-August 23, 2007
- - #168496: reCAPTCHA Themes - Tab Index optional
-
-August 22, 2007
- - #169295 by kthagen: 5.x-2.1 captchas are silently ignored
- 
-August 21, 2007
- - Small .inc bug fix
- - #148079: Roll back to different captcha if recaptcha.net is unavailable
- 
-August 20, 2007
- - Info file fixes
-
-August 19, 2007
- - #168496: reCAPTCHA Themes
- - #154215: Upgrade to latest version of Captcha
- 
-August 10, 2007
- - Patch #165514 by kthagen: Small usability requests
-
-July 20, 2007 - Version 2.0
- - Update to the Captcha release 3.x
- - Documentation fixes
- - Patch #160630 by cedo: Mailhide demands of encryption
-
-July 15, 2007
- - Documentation for multiple domain support (christefano)
-
-July 12, 2007
- - Patch #154215: Upgrade to latest version of Captcha
- - Patch #158131 by olax: Norwegian Bokmål Translation
-
-June 11, 2007
- - Patch #149200: Show Error in reCAPTCHA Form
- - Patch #150799: No server settings
- - Patch #150803: Switched package to "SPAM Control"
-
-June 8th, 2007 - Version 1.0
- - Patch #147924: reCAPTCHA Mailhide Input Filter
-
-June 5th, 2007
- - Put the reCAPTCHA server settings into a fieldset
- - Patch #149513: Help topics in admin/help/recaptcha
- - Patch #149427 by kengggg: Thai translation
-
-June 4th, 2007
- - Patch #149230: Display error when PHP library is not present
- - Patch #147907 by lennart: Split up form CSS fix
- - Patch #148347: License issue fix
- - Patch #149283: Uninstaller to remove module variables
-
-May 31st, 2007
- - Patch #148042 by Takafumi: Japanese translation 
- - Removal of title appearing before reCAPTCHA
- - Some Drupal coding standards fixes
- - Documentation
-
-May 30th, 2007
- - First Release
-
-
-AUTHORS
--------
-
- * Rob Loach (http://www.robloach.net)
- * Japanese translation by Takafumi (http://drupal.jp)
- * CSS fix by lennart (http://zensci.com)
- * Thai translation by kengggg (http://www.keng.ws)
+http://drupal.org/project/cvs/147903?branch=DRUPAL-5--2
 
 
 THANK YOU

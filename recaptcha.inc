@@ -1,5 +1,10 @@
 <?php
-/* $Id $ */
+/* $Id$ */
+
+/**
+ * @file
+ * Code required by both reCAPTCHA and reCAPTCHA Mailhide modules
+ */
 
 /**
  * Let the user know that the reCAPTCHA PHP library is not installed
