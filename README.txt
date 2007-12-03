@@ -28,8 +28,6 @@ CONFIGURATION
    
 1. Enable reCAPTCHA and CAPTCHA modules in:
        admin/build/modules
-   Note: The reCAPTCHA module requires at least Captcha
-         version 3.x
    
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
@@ -96,7 +94,7 @@ it so multi-domain systems are capable.
 CHANGELOG
 ---------
 
-http://drupal.org/project/cvs/147903?branch=DRUPAL-5--2
+http://drupal.org/project/cvs/147903?branch=DRUPAL-6--1
 
 
 THANK YOU

@@ -11,9 +11,9 @@
 * @param section which section of the site we're displaying help
 * @return help text for section
 */
-function recaptcha_mailhide_help($section = '') {
+function recaptcha_mailhide_help($path, $arg) {
   $output = '';
-  switch ($section) {
+  switch ($path) {
     case 'admin/modules#name':
       $output .= t('reCAPTCHA');
       break;
