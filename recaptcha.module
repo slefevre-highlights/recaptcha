@@ -44,7 +44,7 @@ function recaptcha_menu() {
     'description' => 'Administer the reCAPTCHA web service.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('recaptcha_admin_settings'),
-    'access arguments' => 'administer recaptcha',
+    'access arguments' => array('administer recaptcha'),
     'type' => MENU_LOCAL_TASK,
   );
   return $items;
