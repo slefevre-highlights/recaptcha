@@ -167,7 +167,11 @@ function recaptcha_captcha() {
 
           // Localization support.
           global $language;
-          $js .= ", lang:'" . $language->language . "'";
+          if (isset($language->language)) {
+            // reCAPTCHA uses two-character language codes, so 'pt-br' must be
+            // passed as 'pt' (cf. http://wiki.recaptcha.net/index.php/I18n).
+            $js .= ", lang:'" . substr($language->language, 0, 2) . "'";
+          }
 
           // Add support to display the custom theme
           if ($recaptcha_theme == 'custom') {
