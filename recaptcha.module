@@ -161,7 +161,7 @@ function recaptcha_captcha() {
         // Load the recaptcha library.
         recaptcha_load_library();
 
-        global $_recaptcha_jsadded;
+        static $_recaptcha_jsadded = FALSE;
 
         // Check if reCAPTCHA is available and show Math if not.
         $connect = @fsockopen(RECAPTCHA_VERIFY_SERVER, 80);
@@ -178,29 +178,31 @@ function recaptcha_captcha() {
         $recaptcha_form_value = NULL;
 
         // Construct the Javascript, but only display it once.
-        if (!isset($_recaptcha_jsadded)) {
+        if ($_recaptcha_jsadded == FALSE) {
           $_recaptcha_jsadded = TRUE;
-          $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
+          $recaptcha_options = array(
+            'theme' => $recaptcha_theme,
+          );
 
           // Localization support.
           global $language;
           if (isset($language->language)) {
             // reCAPTCHA uses two-character language codes, so 'pt-br' must be
             // passed as 'pt' (cf. http://wiki.recaptcha.net/index.php/I18n).
-            $js .= ", lang:'" . substr($language->language, 0, 2) . "'";
+            $recaptcha_options['lang'] = substr($language->language, 0, 2);
           }
 
           // Add support to display the custom theme.
           if ($recaptcha_theme == 'custom') {
-           $js .= ", custom_theme_widget : 'recaptcha_custom_theme_widget'";
-           $recaptcha_form_value = theme('recaptcha_custom_widget');
+            $recaptcha_options['custom_theme_widget'] = 'recaptcha_custom_theme_widget';
+            $recaptcha_form_value = theme('recaptcha_custom_widget');
           }
 
           // Set the default tab index.
           if (!empty($recaptcha_tabindex)) {
-            $js .= ', tabindex : '. $recaptcha_tabindex;
+            $recaptcha_options['tabindex'] = $recaptcha_tabindex;
           }
-          drupal_add_js($js .'};', 'inline');
+          drupal_add_js('var RecaptchaOptions = '. drupal_to_js($recaptcha_options) .';', 'inline');
         }
 
         // Create the form. Captcha requires TRUE to be returned in solution.
