@@ -7,10 +7,13 @@
  */
 
 /**
-* Display help and module information
-* @param section which section of the site we're displaying help
-* @return help text for section
-*/
+ * Display help and module information.
+ *
+ * @param $path
+ *   The path of the section of the site we're displaying help for.
+ * @return
+ *   Help text for section.
+ */
 function recaptcha_help($path, $arg) {
   $output = '';
   switch ($path) {
@@ -32,7 +35,7 @@ function recaptcha_help($path, $arg) {
       break;
   }
   return $output;
-} // function recaptcha_help
+}
 
 /**
  * Implementation of hook_menu().
@@ -48,22 +51,22 @@ function recaptcha_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   return $items;
-} // function recaptcha_menu
+}
 
 /**
-* Valid permissions for this module
-* @return array An array of valid permissions for the onthisdate module
-*/
+ * Implementation of hook_perm().
+ */
 function recaptcha_perm() {
   return array('administer recaptcha');
-} // function recaptcha_perm()
+}
 
 /**
- * Implementation of admin settings().
+ * Form callback; administrative settings for reCaptcha.
  */
 function recaptcha_admin_settings() {
-  require_once('recaptcha.inc');
-  @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
+  // Load the recaptcha library.
+  recaptcha_load_library();
+
   $form = array();
   $form['recaptcha_public_key'] = array(
     '#type' => 'textfield',
@@ -116,10 +119,12 @@ function recaptcha_admin_settings() {
   );
 
   return system_settings_form($form);
-} // function recaptcha_admin_settings
+}
 
 /**
- * The validation on the reCAPTCHA administration settings
+ * Validation function for recaptcha_admin_settings().
+ *
+ * @see recaptcha_admin_settings()
  */
 function recaptcha_admin_settings_validate($form, &$form_state) {
   $tabindex = $form_state['values']['recaptcha_tabindex'];
@@ -129,9 +134,20 @@ function recaptcha_admin_settings_validate($form, &$form_state) {
 }
 
 /**
- * reCAPTCHA implementation of hook_captcha
+ * Load the recaptcha library.
  */
-function recaptcha_captcha() {  
+function recaptcha_load_library() {
+  $path = drupal_get_path('module', 'recaptcha');
+  require_once($path . '/recaptcha.inc');
+  if (!include_once($path . '/recaptcha/recaptchalib.php')) {
+    _recaptcha_library_not_found();
+  }
+}
+
+/**
+ * Implementation of hook_captcha().
+ */
+function recaptcha_captcha() {
   $args = func_get_args();
   $op = array_shift($args); 
   switch ($op) {
@@ -142,26 +158,27 @@ function recaptcha_captcha() {
       $captcha_type = array_shift($args);
       $result = array();
       if ($captcha_type == 'reCAPTCHA') {
-        require_once('recaptcha.inc');
-        global $_recaptcha_jsadded;
-        @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
+        // Load the recaptcha library.
+        recaptcha_load_library();
 
-        // Check if reCAPTCHA is available and show Math if not
+        global $_recaptcha_jsadded;
+
+        // Check if reCAPTCHA is available and show Math if not.
         $connect = @fsockopen(RECAPTCHA_VERIFY_SERVER, 80);
         if (!$connect) {
           return captcha_captcha('generate', 'Math', $args);
         }
-        fclose($connect); // close connection
-        
-        // Retrieve configuration variables from database
+        fclose($connect);
+
+        // Retrieve configuration variables from database.
         $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
         $recaptcha_public_key = variable_get('recaptcha_public_key', '');
         $recaptcha_form_value = NULL;
-        
-        // Construct the Javascript
-        if (!isset($_recaptcha_jsadded)) { // only display the javascript once.
+
+        // Construct the Javascript, but only display it once.
+        if (!isset($_recaptcha_jsadded)) {
           $_recaptcha_jsadded = TRUE;
           $js = "var RecaptchaOptions = {theme : '$recaptcha_theme'";
 
@@ -173,21 +190,21 @@ function recaptcha_captcha() {
             $js .= ", lang:'" . substr($language->language, 0, 2) . "'";
           }
 
-          // Add support to display the custom theme
+          // Add support to display the custom theme.
           if ($recaptcha_theme == 'custom') {
            $js .= ", custom_theme_widget : 'recaptcha_custom_theme_widget'";
            $recaptcha_form_value = theme('recaptcha_custom_widget');
           }
-          
-          // Set the default tab index
+
+          // Set the default tab index.
           if (!empty($recaptcha_tabindex)) {
             $js .= ', tabindex : '. $recaptcha_tabindex;
           }
           drupal_add_js($js .'};', 'inline');
         }
-        
-        // Create the form
-        $result['solution'] = TRUE;   // require TRUE to be returned
+
+        // Create the form. Captcha requires TRUE to be returned in solution.
+        $result['solution'] = TRUE;
         $result['form']['captcha_response'] = array(
           '#type' => 'item',
           '#description' => recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection),
@@ -201,10 +218,10 @@ function recaptcha_captcha() {
       }
       return $result;
   }
-} // function recaptcha_captcha
+}
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */ 
 function recaptcha_theme() {
   return array(
@@ -215,8 +232,10 @@ function recaptcha_theme() {
 }
 
 /**
-* Creates the custom themed recaptcha widget
-*/
+ * Theme function: creates the custom themed recaptcha widget.
+ *
+ * @ingroup themeable
+ */
 function theme_recaptcha_custom_widget() {
   $recaptcha_only_if_incorrect_sol = t('Incorrect please try again');
   $recaptcha_only_if_image_enter = t('Enter the words above:');
@@ -239,13 +258,10 @@ EOT;
 }
 
 /**
- * Callback function for fetching the validation result from reCAPTCHA server
- * and passing it to the Drupal CAPTCHA API.
+ * Process function: fetch the validation result from reCAPTCHA server and pass it to the Drupal CAPTCHA API.
  */
 function recaptcha_process($element, $edit, &$form_state, $complete_form) {
   if (isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
-    require_once('recaptcha.inc');
-    @(include_once('recaptcha/recaptchalib.php')) or _recaptcha_library_not_found();
     $resp = recaptcha_check_answer(
       variable_get('recaptcha_private_key', ''),
       $_SERVER['REMOTE_ADDR'],

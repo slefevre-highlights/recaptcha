@@ -8,10 +8,10 @@
 
 /**
  * Let the user know that the reCAPTCHA PHP library is not installed
- */   
+ */
 function _recaptcha_library_not_found() {
-  global $calledalready;
-  if(!$calledalready) {
+  static $calledalready = FALSE;
+  if ($calledalready == FALSE) {
     $calledalready = TRUE;
     drupal_set_message(t('The <a href="@url" target="_blank">reCAPTCHA PHP library</a> was not found. Please install it into %recaptchadir.', array('@url' => 'http://recaptcha.net/plugins/php/index.html', '%recaptchadir' => drupal_get_path('module', 'recaptcha') . '/recaptcha')), 'error');
     if(!function_exists('recaptcha_get_signup_url')) {
@@ -35,4 +35,4 @@ function _recaptcha_library_not_found() {
       }
     }
   }
-} // function _recaptcha_library_not_found()
+}

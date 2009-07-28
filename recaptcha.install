@@ -5,7 +5,7 @@
  * @file
  * Provides install, updated, and uninstall functions for recaptcha.
  */
- 
+
 /**
  * Implementation of hook_uninstall().
  */
