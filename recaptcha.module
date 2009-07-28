@@ -207,11 +207,11 @@ function recaptcha_captcha() {
 
         // Create the form. Captcha requires TRUE to be returned in solution.
         $result['solution'] = TRUE;
+        $html = recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection);
         $result['form']['captcha_response'] = array(
           '#type' => 'item',
-          '#description' => recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection),
           '#required' => TRUE,
-          '#value' => $recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">'. $recaptcha_form_value .'</div>' : NULL,
+          '#value' => ($recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">'. $recaptcha_form_value .'</div>' : '') . $html,
           // Make sure this 'item' form element is handled as an input element 
           // so that a '#process' callback can be attached.
           '#input' => TRUE, 
