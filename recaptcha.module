@@ -125,7 +125,11 @@ function recaptcha_captcha() {
         $captcha['solution'] = TRUE;
         $captcha['captcha_validate'] = 'recaptcha_captcha_validation';
         $html = recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection);
-        $captcha['form'] = array(
+        $captcha['form']['captcha_response'] = array(
+          '#type' => 'hidden',
+          '#value' => 'reCAPTCHA',
+        );
+        $captcha['form']['captcha_form'] = array(
           '#type' => 'item',
           '#value' => ($recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">'. $recaptcha_form_value .'</div>' : '') . $html,
         );
@@ -138,7 +142,7 @@ function recaptcha_captcha() {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
-  if (isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
+  if ($response == 'reCAPTCHA' && isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
     $resp = recaptcha_check_answer(
       variable_get('recaptcha_private_key', ''),
       $_SERVER['REMOTE_ADDR'],
