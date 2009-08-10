@@ -65,7 +65,7 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
     case 'process':
       require_once('recaptcha.inc');
       global $_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $_recaptcha_mailhide_nokey_warn;
-      recaptcha_load_library();
+      _recaptcha_mailhide_load_library();
       $_recaptcha_mailhide_public_key = variable_get('recaptcha_mailhide_public_key', '');
       $_recaptcha_mailhide_private_key = variable_get('recaptcha_mailhide_private_key', '');
 
@@ -107,4 +107,14 @@ function _recaptcha_replace($match) {
     $email = recaptcha_mailhide_html($_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $match[2]);
   }
   return $match[1] . $email . $match[3];
+}
+
+/**
+ * Load the recaptcha library.
+ */
+function _recaptcha_mailhide_load_library() {
+  module_load_include('inc', 'recaptcha');
+  if (@!include_once(drupal_get_path('module', 'recaptcha') . '/recaptcha/recaptchalib.php')) {
+    _recaptcha_library_not_found();
+  }
 }
