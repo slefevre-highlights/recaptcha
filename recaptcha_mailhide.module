@@ -43,7 +43,7 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
       return recaptcha_mailhide_filter_tips($delta, $format);
 
     case 'settings':
-        recaptcha_load_library();
+        _recaptcha_mailhide_load_library();
         $form['filter_recaptcha'] = array('#type' => 'fieldset', '#title' => t('reCAPTCHA Mailhide Keys'), '#collapsible' => TRUE, '#collapsed' => FALSE);
         $form['filter_recaptcha']['recaptcha_mailhide_public_key'] = array(
           '#type' => 'textfield',
@@ -63,7 +63,6 @@ function recaptcha_mailhide_filter($op, $delta = 0, $format = -1, $text = '') {
       break;
 
     case 'process':
-      require_once('recaptcha.inc');
       global $_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $_recaptcha_mailhide_nokey_warn;
       _recaptcha_mailhide_load_library();
       $_recaptcha_mailhide_public_key = variable_get('recaptcha_mailhide_public_key', '');
@@ -113,8 +112,5 @@ function _recaptcha_replace($match) {
  * Load the recaptcha library.
  */
 function _recaptcha_mailhide_load_library() {
-  module_load_include('inc', 'recaptcha');
-  if (@!include_once(drupal_get_path('module', 'recaptcha') . '/recaptcha/recaptchalib.php')) {
-    _recaptcha_library_not_found();
-  }
+  module_load_include('php', 'recaptcha', 'recaptcha/recapthcalib');
 }
