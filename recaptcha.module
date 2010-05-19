@@ -86,10 +86,12 @@ function recaptcha_captcha() {
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
         $recaptcha_public_key = variable_get('recaptcha_public_key', '');
         $recaptcha_form_value = NULL;
+        $recaptcha_ajax_api = variable_get('recaptcha_ajax_api', FALSE);
+
 
         // Construct the Javascript, but only display it once.
         static $_recaptcha_jsadded = FALSE;
-        if ($_recaptcha_jsadded == FALSE) {
+        if ($_recaptcha_jsadded == FALSE && $recaptcha_ajax_api == FALSE) {
           $_recaptcha_jsadded = TRUE;
           $recaptcha_options = array(
             'theme' => $recaptcha_theme,
@@ -124,10 +126,24 @@ function recaptcha_captcha() {
           '#type' => 'hidden',
           '#value' => 'reCAPTCHA',
         );
-        $captcha['form']['captcha_form'] = array(
-          '#type' => 'item',
-          '#value' => ($recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">'. $recaptcha_form_value .'</div>' : '') . $html,
-        );
+
+        // Expose the form, either straight HTML, or using the AJAX API.
+        if ($recaptcha_ajax_api == FALSE) {
+          $captcha['form']['captcha_form'] = array(
+            '#type' => 'item',
+            '#value' => ($recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">'. $recaptcha_form_value .'</div>' : '') . $html,
+          );
+        }
+        else {
+          $html = ($recaptcha_theme == 'custom') ? theme('recaptcha_custom_widget') : '';
+          $captcha['form']['captcha_form'] = array(
+            '#type' => 'item',
+            '#value' => '<div id="recaptcha_ajax_api_container">'. $html .'</div>',
+          );
+          $js = "$(function() { Recaptcha.create('$recaptcha_public_key', 'recaptcha_ajax_api_container', {theme: '$recaptcha_theme'});});";
+          drupal_add_js($js, 'inline', 'header');
+          drupal_set_html_head('<script type="text/javascript" src="http://api.recaptcha.net/js/recaptcha_ajax.js"></script>');
+        }
       }
       return $captcha;
   }

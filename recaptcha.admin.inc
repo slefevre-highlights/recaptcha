@@ -36,6 +36,12 @@ function recaptcha_admin_settings() {
     '#default_value' => variable_get('recaptcha_secure_connection', FALSE),
     '#description' => t('Connect to the reCAPTCHA server using a secure connection.'),
   );
+  $form['recaptcha_ajax_api'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('AJAX API'),
+    '#default_value' => variable_get('recaptcha_ajax_api', FALSE),
+    '#description' => t('Use the AJAX API to display reCAPTCHA.'),
+  );
   $form['recaptcha_theme_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Theme Settings'),
