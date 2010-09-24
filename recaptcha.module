@@ -88,6 +88,15 @@ function recaptcha_captcha() {
         $recaptcha_form_value = NULL;
         $recaptcha_ajax_api = variable_get('recaptcha_ajax_api', FALSE);
 
+        if ($recaptcha_ajax_api) {
+          // By default CAPTCHA turns off page caching on
+          // any page where a CAPTCHA challenge appears. 
+          // If recaptcha is using AJAX API, set caching
+          // back to it's old state as stored in DB.
+          global $conf;
+          $cache = variable_get('cache', FALSE);
+          $conf['cache'] = $cache;
+        }
 
         // Construct the Javascript, but only display it once.
         static $_recaptcha_jsadded = FALSE;
