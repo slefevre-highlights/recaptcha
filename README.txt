@@ -24,7 +24,7 @@ CONFIGURATION
 
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
-       admin/user/captcha/recaptcha
+       admin/config/people/captcha/recaptcha
 
 3. Register for a public and private reCAPTCHA key at:
        http://recaptcha.net/api/getkey
@@ -103,7 +103,7 @@ http://recaptcha.net/apidocs/captcha/client.html#customization
 CHANGELOG
 ---------
 
-http://drupal.org/project/cvs/147903?branch=DRUPAL-6--1
+http://drupal.org/project/cvs/147903?branch=DRUPAL-7--1
 
 
 THANK YOU
