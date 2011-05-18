@@ -16,11 +16,11 @@ function recaptcha_help($path, $arg) {
       break;
     case 'admin/modules#description':
     case 'admin/user/captcha/recaptcha':
-      $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('http://www.recaptcha.net')));
+      $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('http://www.google.com/recaptcha')));
       break;
     case 'admin/help#recaptcha':
       $output .= '<p>' .
-        t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.recaptcha.net'))) .
+        t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.google.com/recaptcha'))) .
         '</p><h3>' .
         t('Configuration') .
         '</h3><p>' .
@@ -114,7 +114,7 @@ function recaptcha_captcha() {
           global $language;
           if (isset($language->language)) {
             // reCAPTCHA uses two-character language codes, so 'pt-br' must be
-            // passed as 'pt' (cf. http://wiki.recaptcha.net/index.php/I18n).
+            // passed as 'pt'; cf. http://code.google.com/apis/recaptcha/docs/customization.html#i18n
             $recaptcha_options['lang'] = drupal_substr($language->language, 0, 2);
           }
 
@@ -154,7 +154,7 @@ function recaptcha_captcha() {
             '#markup' => '<div id="recaptcha_ajax_api_container">' . $html . '</div>',
           );
           $js = "(function ($) { $(function() { Recaptcha.create('$recaptcha_public_key', 'recaptcha_ajax_api_container', {theme: '$recaptcha_theme'});});})(jQuery);";
-          drupal_add_js('http://api.recaptcha.net/js/recaptcha_ajax.js', array('type' => 'external'));
+          drupal_add_js('https://www.google.com/recaptcha/api/js/recaptcha.js', array('type' => 'external'));
           drupal_add_js($js, array('type' => 'inline'));
         }
       }
