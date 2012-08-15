@@ -179,12 +179,12 @@ function recaptcha_captcha() {
  */
 function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
   global $user;
-  if ($response == 'reCAPTCHA' && isset($_POST['recaptcha_challenge_field']) && isset($_POST['recaptcha_response_field'])) {
+  if ($response === 'reCAPTCHA' && !empty($_POST['recaptcha_challenge_field']) && !empty($_POST['recaptcha_response_field'])) {
     $resp = recaptcha_check_answer(
       variable_get('recaptcha_private_key', ''),
       ip_address(),
-      $_POST['recaptcha_challenge_field'],
-      $_POST['recaptcha_response_field']
+      check_plain($_POST['recaptcha_challenge_field']),
+      check_plain($_POST['recaptcha_response_field'])
     );
     return $resp->is_valid;
   }
