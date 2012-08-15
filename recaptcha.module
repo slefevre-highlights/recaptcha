@@ -92,6 +92,11 @@ function recaptcha_captcha() {
         $recaptcha_form_value = NULL;
         $recaptcha_ajax_api = variable_get('recaptcha_ajax_api', FALSE);
 
+        // Fallback to Math if reCAPTCHA is not configured.
+        if (!$recaptcha_public_key) {
+          return captcha_captcha('generate', 'Math', $args);
+        }
+
         if ($recaptcha_ajax_api) {
           // By default CAPTCHA turns off page caching on
           // any page where a CAPTCHA challenge appears.
