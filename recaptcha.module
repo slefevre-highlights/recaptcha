@@ -88,7 +88,7 @@ function recaptcha_captcha() {
         $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
-        $recaptcha_public_key = variable_get('recaptcha_public_key', '');
+        $recaptcha_public_key = variable_get('recaptcha_public_key', FALSE);
         $recaptcha_form_value = NULL;
         $recaptcha_ajax_api = variable_get('recaptcha_ajax_api', FALSE);
 
@@ -179,10 +179,12 @@ function recaptcha_captcha() {
  */
 function recaptcha_captcha_validation($solution = NULL, $response = NULL) {
   global $user;
-  if ($response === 'reCAPTCHA' && !empty($_POST['recaptcha_challenge_field']) && !empty($_POST['recaptcha_response_field'])) {
+  $recaptcha_private_key = variable_get('recaptcha_private_key', FALSE);
+  $ip_address = ip_address();
+  if ($recaptcha_private_key && $ip_address && $response === 'reCAPTCHA' && !empty($_POST['recaptcha_challenge_field']) && !empty($_POST['recaptcha_response_field'])) {
     $resp = recaptcha_check_answer(
-      variable_get('recaptcha_private_key', ''),
-      ip_address(),
+      $recaptcha_private_key,
+      $ip_address,
       check_plain($_POST['recaptcha_challenge_field']),
       check_plain($_POST['recaptcha_response_field'])
     );

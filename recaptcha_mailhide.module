@@ -93,9 +93,14 @@ function _filter_recaptcha_mailhide_tips($filter, $format, $long = FALSE) {
 function _recaptcha_replace($match) {
   global $_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $_recaptcha_mailhide_nokey_warn;
   // recaptchalib will die if we invoke without setting the keys. Fail gracefully in this case.
-  if (empty($_recaptcha_mailhide_public_key) || empty($_recaptcha_mailhide_private_key)) {
+  if (empty($_recaptcha_mailhide_public_key) || empty($_recaptcha_mailhide_private_key) || !function_exists('mcrypt_encrypt')) {
     if ($_recaptcha_mailhide_nokey_warn != TRUE) {
-      drupal_set_message(t('Addresses cannot be hidden because the administrator has not set the reCAPTCHA Mailhide keys.'), 'error');
+      if (!function_exists('mcrypt_encrypt')) {
+        drupal_set_message(t('Addresses cannot be hidden because Mcrypt is not installed.'), 'error');
+      }
+      else {
+        drupal_set_message(t('Addresses cannot be hidden because the administrator has not set the reCAPTCHA Mailhide keys.'), 'error');
+      }
       $_recaptcha_mailhide_nokey_warn = TRUE;
     }
     $email = $match[2];
