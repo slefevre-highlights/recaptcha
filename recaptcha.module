@@ -84,7 +84,7 @@ function recaptcha_captcha() {
         }
         fclose($connect);
 
-        // Retrieve configuration variables from database.
+        // Retrieve configuration variables.
         $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
@@ -98,13 +98,11 @@ function recaptcha_captcha() {
         }
 
         if ($recaptcha_ajax_api) {
-          // By default CAPTCHA turns off page caching on
-          // any page where a CAPTCHA challenge appears.
-          // If recaptcha is using AJAX API, set caching
-          // back to it's old state as stored in DB.
+          // By default CAPTCHA turns off page caching on any page where a
+          // CAPTCHA challenge appears. If recaptcha is using AJAX API, set
+          // caching back to its old state as stored in DB.
           global $conf;
-          $cache = variable_get('cache', FALSE);
-          $conf['cache'] = $cache;
+          $conf['cache'] = unserialize(db_query("SELECT value FROM {variable} WHERE name = 'cache'")->fetchField());
         }
 
         // Construct the Javascript, but only display it once.
