@@ -163,9 +163,9 @@ function recaptcha_captcha() {
             '#type' => 'item',
             '#markup' => '<div id="recaptcha_ajax_api_container">' . $html . '</div>',
           );
-          $js = "(function ($) { $(function() { Recaptcha.create('$recaptcha_public_key', 'recaptcha_ajax_api_container', {theme: '$recaptcha_theme'});});})(jQuery);";
           drupal_add_js('https://www.google.com/recaptcha/api/js/recaptcha.js', array('type' => 'external'));
-          drupal_add_js($js, array('type' => 'inline'));
+          drupal_add_js(array('recaptcha' => array('public_key' => $recaptcha_public_key, 'container' => 'recaptcha_ajax_api_container', 'theme' => $recaptcha_theme)), 'setting');
+          drupal_add_js(drupal_get_path('module', 'recaptcha') . '/recaptcha.js');
         }
       }
       return $captcha;
