@@ -49,7 +49,7 @@ function recaptcha_menu() {
 }
 
 /**
- * Implements hook_perm().
+ * Implements hook_permission().
  */
 function recaptcha_permission() {
   return array(
