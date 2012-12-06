@@ -104,13 +104,14 @@ function recaptcha_captcha() {
           $conf['cache'] = unserialize(db_query("SELECT value FROM {variable} WHERE name = 'cache'")->fetchField());
         }
 
+        $recaptcha_options = array(
+          'theme' => $recaptcha_theme,
+        );
+
         // Construct the Javascript, but only display it once.
         static $_recaptcha_jsadded = FALSE;
         if ($_recaptcha_jsadded == FALSE && $recaptcha_ajax_api == FALSE) {
           $_recaptcha_jsadded = TRUE;
-          $recaptcha_options = array(
-            'theme' => $recaptcha_theme,
-          );
 
           // Localization support.
           global $language;
@@ -163,11 +164,9 @@ function recaptcha_captcha() {
             '#markup' => '<div id="recaptcha_ajax_api_container">' . $html . '</div>',
           );
           drupal_add_js('https://www.google.com/recaptcha/api/js/recaptcha.js', array('type' => 'external'));
-          drupal_add_js(array('recaptcha' => array(
-            'public_key' => $recaptcha_public_key,
-            'container' => 'recaptcha_ajax_api_container',
-            'theme' => $recaptcha_theme,
-          )), 'setting');
+          $recaptcha_options['public_key'] = $recaptcha_public_key;
+          $recaptcha_options['container'] = 'recaptcha_ajax_api_container';
+          drupal_add_js(array('recaptcha' => $recaptcha_options), 'setting');
           drupal_add_js(drupal_get_path('module', 'recaptcha') . '/recaptcha.js');
         }
       }
