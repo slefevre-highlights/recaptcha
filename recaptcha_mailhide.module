@@ -45,7 +45,9 @@ function recaptcha_mailhide_filter_info() {
   return $filters;
 }
 
-// Filter callbacks
+/**
+ * Filter callbacks.
+ */
 function _filter_recaptcha_mailhide($text, $filter, $format) {
   global $_recaptcha_mailhide_public_key, $_recaptcha_mailhide_private_key, $_recaptcha_mailhide_nokey_warn;
   _recaptcha_mailhide_load_library();
