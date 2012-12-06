@@ -16,11 +16,11 @@ function recaptcha_help($path, $arg) {
       break;
     case 'admin/modules#description':
     case 'admin/user/captcha/recaptcha':
-      $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('http://www.google.com/recaptcha')));
+      $output .= t('Uses the <a href="@url" target="_blank">reCAPTCHA</a> web service to improve the CAPTCHA system and protect email addresses.', array('@url' => url('https://www.google.com/recaptcha')));
       break;
     case 'admin/help#recaptcha':
       $output .= '<p>' .
-        t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.google.com/recaptcha'))) .
+        t('Uses the reCAPTCHA web service to improve the CAPTCHA module and protect email addresses. For more information on what reCAPTCHA is, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('https://www.google.com/recaptcha'))) .
         '</p><h3>' .
         t('Configuration') .
         '</h3><p>' .
@@ -85,7 +85,6 @@ function recaptcha_captcha() {
         fclose($connect);
 
         // Retrieve configuration variables.
-        $recaptcha_secure_connection = variable_get('recaptcha_secure_connection', FALSE);
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
         $recaptcha_public_key = variable_get('recaptcha_public_key', FALSE);
@@ -117,7 +116,7 @@ function recaptcha_captcha() {
           global $language;
           if (isset($language->language)) {
             // reCAPTCHA uses two-character language codes, so 'pt-br' must be
-            // passed as 'pt'; cf. http://code.google.com/apis/recaptcha/docs/customization.html#i18n
+            // passed as 'pt'; cf. https://developers.google.com/recaptcha/docs/customization#i18n
             $recaptcha_options['lang'] = drupal_substr($language->language, 0, 2);
           }
 
@@ -144,7 +143,7 @@ function recaptcha_captcha() {
           $recaptcha_public_key .= '&nocookie=1';
         }
 
-        $html = recaptcha_get_html($recaptcha_public_key, NULL, $recaptcha_secure_connection);
+        $html = recaptcha_get_html($recaptcha_public_key, NULL, TRUE);
         $captcha['form']['captcha_response'] = array(
           '#type' => 'hidden',
           '#value' => 'reCAPTCHA',
