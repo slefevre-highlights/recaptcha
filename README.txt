@@ -98,12 +98,6 @@ For more information on this, visit:
 https://developers.google.com/recaptcha/docs/customization
 
 
-CHANGELOG
----------
-
-http://drupal.org/project/cvs/147903?branch=DRUPAL-7--1
-
-
 THANK YOU
 ---------
 
