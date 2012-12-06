@@ -62,7 +62,7 @@ you use that input filter:
 
 Note: You will require the installation of the mcrypt
       PHP module in your web server for Mailhide to work:
-         http://uk2.php.net/manual/en/ref.mcrypt.php
+         http://php.net/manual/en/ref.mcrypt.php
 
 
 MULTI-DOMAIN SUPPORT
