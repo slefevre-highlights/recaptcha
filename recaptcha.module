@@ -163,7 +163,7 @@ function recaptcha_captcha() {
             '#type' => 'item',
             '#markup' => '<div id="recaptcha_ajax_api_container">' . $html . '</div>',
           );
-          drupal_add_js('https://www.google.com/recaptcha/api/js/recaptcha.js', array('type' => 'external'));
+          drupal_add_js('https://www.google.com/recaptcha/api/js/recaptcha_ajax.js', array('type' => 'external'));
           $recaptcha_options['public_key'] = $recaptcha_public_key;
           $recaptcha_options['container'] = 'recaptcha_ajax_api_container';
           drupal_add_js(array('recaptcha' => $recaptcha_options), 'setting');
