@@ -9,8 +9,11 @@
  * Form callback; administrative settings for reCaptcha.
  */
 function recaptcha_admin_settings() {
-  // Load the recaptcha library.
-  _recaptcha_load_library();
+  // Load the recaptcha library. Error if library does not load.
+  if (!_recaptcha_load_library()) {
+    drupal_set_message(t('Error loading recaptchalib.'), 'error');
+    return FALSE;
+  }
 
   $form = array();
   $form['recaptcha_public_key'] = array(
