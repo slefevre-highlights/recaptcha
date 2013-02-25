@@ -80,11 +80,9 @@ function recaptcha_captcha() {
         }
 
         // Check if reCAPTCHA is available and show Math if not.
-        $connect = @fsockopen(RECAPTCHA_VERIFY_SERVER, 80);
-        if (!$connect) {
+        if (!_recaptcha_test_recaptcha_server()) {
           return captcha_captcha('generate', 'Math', $args);
         }
-        fclose($connect);
 
         // Retrieve configuration variables.
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
