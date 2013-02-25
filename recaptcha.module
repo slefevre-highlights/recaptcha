@@ -74,16 +74,6 @@ function recaptcha_captcha() {
       $captcha_type = array_shift($args);
       $captcha = array();
       if ($captcha_type == 'reCAPTCHA') {
-        // Load the recaptcha library. Show Math if library does not load.
-        if (!_recaptcha_load_library()) {
-          return captcha_captcha('generate', 'Math', $args);
-        }
-
-        // Check if reCAPTCHA is available and show Math if not.
-        if (!_recaptcha_test_recaptcha_server()) {
-          return captcha_captcha('generate', 'Math', $args);
-        }
-
         // Retrieve configuration variables.
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
@@ -91,8 +81,9 @@ function recaptcha_captcha() {
         $recaptcha_form_value = NULL;
         $recaptcha_ajax_api = variable_get('recaptcha_ajax_api', FALSE);
 
-        // Fallback to Math if reCAPTCHA is not configured.
-        if (!$recaptcha_public_key) {
+        // Test if reCAPTCHA can be used, falling back to Math if it is not
+        // configured, the library won't load, or the server is down.
+        if (!$recaptcha_public_key || !_recaptcha_load_library() || !_recaptcha_test_recaptcha_server()) {
           return captcha_captcha('generate', 'Math', $args);
         }
 
