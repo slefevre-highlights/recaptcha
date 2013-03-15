@@ -7,11 +7,13 @@ more information on what reCAPTCHA is, please visit:
     https://www.google.com/recaptcha
 
 
-INSTALLATION
+DEPENDENCIES
 ------------
 
-1. Extract the reCAPTCHA module to your local favourite
-   modules directory (sites/all/modules).
+* reCAPTCHA depends on the CAPTCHA module.
+  https://drupal.org/project/captcha
+* Some people have found that they also need to use jQuery Update module.
+  https://drupal.org/project/jquery_update
 
 
 CONFIGURATION
