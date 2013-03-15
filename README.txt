@@ -18,7 +18,7 @@ CONFIGURATION
 -------------
 
 1. Enable reCAPTCHA and CAPTCHA modules in:
-       admin/build/modules
+       admin/modules
 
 2. You'll now find a reCAPTCHA tab in the CAPTCHA
    administration page available at:
@@ -32,7 +32,7 @@ CONFIGURATION
 
 5. Visit the Captcha administration page and set where you
    want the reCAPTCHA form to be presented:
-       admin/user/captcha
+       admin/config/people/captcha
 
 
 MAILHIDE INPUT FORMAT
@@ -44,10 +44,10 @@ use and is only there if you want it. The following is how
 you use that input filter:
 
 1. Enable the reCAPTCHA Mailhide module:
-       admin/build/modules
+       admin/modules
 
-2. Head over to your input format settings:
-       admin/settings/filters
+2. Head over to your text format settings:
+       admin/config/content/formats
 
 3. Edit your default input format and add the reCAPTCHA
    Mailhide filter.
