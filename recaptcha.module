@@ -78,7 +78,6 @@ function recaptcha_captcha() {
         $recaptcha_theme = variable_get('recaptcha_theme', 'red');
         $recaptcha_tabindex = variable_get('recaptcha_tabindex', NULL);
         $recaptcha_public_key = variable_get('recaptcha_public_key', FALSE);
-        $recaptcha_form_value = NULL;
         $recaptcha_ajax_api = variable_get('recaptcha_ajax_api', FALSE);
 
         // Test if reCAPTCHA can be used, falling back to Math if it is not
@@ -115,7 +114,6 @@ function recaptcha_captcha() {
           // Add support to display the custom theme.
           if ($recaptcha_theme == 'custom') {
             $recaptcha_options['custom_theme_widget'] = 'recaptcha_custom_theme_widget';
-            $recaptcha_form_value = theme('recaptcha_custom_widget');
           }
 
           // Set the default tab index.
@@ -135,24 +133,29 @@ function recaptcha_captcha() {
           $recaptcha_public_key .= '&nocookie=1';
         }
 
-        $html = recaptcha_get_html($recaptcha_public_key, NULL, TRUE);
         $captcha['form']['captcha_response'] = array(
           '#type' => 'hidden',
           '#value' => 'reCAPTCHA',
         );
 
         // Expose the form, either straight HTML, or using the AJAX API.
+        // Build the custom theme HTML if necessary.
+        $recaptcha_custom_html = ($recaptcha_theme == 'custom') ? theme('recaptcha_custom_widget') : '';
         if ($recaptcha_ajax_api == FALSE) {
+          // Only generate recaptcha_get_html() if we're not using the AJAX API.
+          $html = recaptcha_get_html($recaptcha_public_key, NULL, TRUE);
           $captcha['form']['captcha_form'] = array(
             '#type' => 'item',
-            '#markup' => ($recaptcha_form_value ? '<div id="recaptcha_custom_theme_widget">' . $recaptcha_form_value . '</div>' : '') . $html,
+            '#markup' => (!empty($recaptcha_custom_html) ? '<div id="recaptcha_custom_theme_widget">' . $recaptcha_custom_html . '</div>' : '') . $html,
           );
         }
         else {
-          $html = ($recaptcha_theme == 'custom') ? theme('recaptcha_custom_widget') : '';
           $captcha['form']['captcha_form'] = array(
             '#type' => 'item',
-            '#markup' => '<div id="recaptcha_ajax_api_container">' . $html . '</div>',
+            // Create the destination container, inserting any custom theme HTML
+            // necessary ($recaptcha_custom_html will be empty if we are not
+            // using custom theme).
+            '#markup' => '<div id="recaptcha_ajax_api_container">' . $recaptcha_custom_html . '</div>',
           );
           drupal_add_js('https://www.google.com/recaptcha/api/js/recaptcha_ajax.js', array('type' => 'external'));
           $recaptcha_options['public_key'] = $recaptcha_public_key;
