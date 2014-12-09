@@ -3,7 +3,4 @@ description = Uses the reCAPTCHA web service to improve the CAPTCHA system.
 core = 7.x
 package = Spam control
 dependencies[] = captcha
-files[] = recaptcha.admin.inc
-files[] = recaptcha.module
-files[] = recaptcha.install
 configure = admin/config/people/captcha/recaptcha
