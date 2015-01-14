@@ -47,12 +47,25 @@ class ReCaptcha
     private $_secret;
     private static $_version = "php_1.0";
 
+
     /**
      * Constructor.
      *
      * @param string $secret shared secret between site and ReCAPTCHA server.
      */
-    function ReCaptcha($secret)
+    public function __construct($secret)
+    {
+        $this->ReCaptcha($secret);
+    }
+
+    /**
+     * Old-style constructor, to be removed once PHP4 support is dropped.
+     *
+     * @param string $secret shared secret between site and ReCAPTCHA server.
+     *
+     * @deprecated since PHP 5
+     */
+    public function ReCaptcha($secret)
     {
         if ($secret == null || $secret == "") {
             die("To use reCAPTCHA you must get an API key from <a href='"
@@ -91,7 +104,35 @@ class ReCaptcha
     private function _submitHTTPGet($path, $data)
     {
         $req = $this->_encodeQS($data);
-        $response = file_get_contents($path . $req);
+        $url = $path . $req;
+
+        // Use curl if possible because allow_url_fopen is off in many
+        // environments, making file_get_contents fail.
+        if (function_exists('curl_init')) {
+            $response = $this->_curl($url);
+        } else {
+            $response = file_get_contents($url);
+        }
+        return $response;
+    }
+
+    private function _curl($url)
+    {
+        // Initiate curl.
+        $c = curl_init();
+        // Set timeout.
+        $timeout = 3;
+        curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, TRUE);
+        // Set url for call.
+        curl_setopt($c, CURLOPT_URL, $url);
+
+        // Execute curl call.
+        $response = curl_exec($c);
+
+        // Close curl.
+        curl_close($c);
+
         return $response;
     }
 
@@ -130,11 +171,9 @@ class ReCaptcha
             $recaptchaResponse->success = true;
         } else {
             $recaptchaResponse->success = false;
-            $recaptchaResponse->errorCodes = $answers [error-codes];
+            $recaptchaResponse->errorCodes = $answers ['error-codes'];
         }
 
         return $recaptchaResponse;
     }
 }
-
-?>
