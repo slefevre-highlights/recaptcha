@@ -100,7 +100,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution, $response, $element, $form_state) {
-  $recaptcha_secret_key= variable_get('recaptcha_secret_key', FALSE);
+  $recaptcha_secret_key= variable_get('recaptcha_secret_key', '');
   if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key) || (!_recaptcha_load_library())) {
     return FALSE;
   }
