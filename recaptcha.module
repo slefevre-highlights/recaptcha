@@ -86,7 +86,7 @@ function recaptcha_captcha_validation($solution, $response, $element, $form_stat
 
   $reCaptcha = new ReCaptcha($recaptcha_secret_key);
   $resp = $reCaptcha->verifyResponse(
-    $_SERVER['REMOTE_ADDR'],
+    ip_address(),
     $_POST['g-recaptcha-response']
   );
   return $resp != NULL && $resp->success;
