@@ -84,6 +84,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
           'class' => 'g-recaptcha',
           'data-sitekey' => $recaptcha_site_key,
           'data-theme' => variable_get('recaptcha_theme', 'light'),
+          'data-type' => variable_get('recaptcha_type', 'image'),
         );
         $captcha['form']['recaptcha_widget'] = array(
           '#markup' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,

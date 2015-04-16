@@ -42,7 +42,7 @@ function recaptcha_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('Theme settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#collapsed' => FALSE,
   );
   $form['recaptcha_theme_settings']['recaptcha_theme'] = array(
     '#type' => 'select',
@@ -54,6 +54,16 @@ function recaptcha_admin_settings() {
     ),
     '#default_value' => variable_get('recaptcha_theme', 'light'),
     '#required' => TRUE,
+  );
+  $form['recaptcha_theme_settings']['recaptcha_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Type'),
+    '#description' => t('The type of CAPTCHA to serve.'),
+    '#options' => array(
+      'image' => t('Image (default)'),
+      'audio' => t('Audio'),
+    ),
+    '#default_value' => variable_get('recaptcha_theme', 'image'),
   );
   $form['recaptcha_theme_settings']['recaptcha_tabindex'] = array(
     '#type' => 'textfield',
