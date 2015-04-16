@@ -15,22 +15,59 @@ function recaptcha_admin_settings() {
     return FALSE;
   }
 
-  $form = array();
   $form['recaptcha_site_key'] = array(
     '#type' => 'textfield',
-    '#title' => t('Site Key'),
+    '#title' => t('Site key'),
     '#default_value' => variable_get('recaptcha_site_key', ''),
     '#maxlength' => 40,
-    '#description' => t('The public key given to you when you <a href="@url" target="_blank">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
+    '#description' => t('The site key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
     '#required' => TRUE,
   );
-  $form['recaptcha_private_key'] = array(
+  $form['recaptcha_secret_key'] = array(
     '#type' => 'textfield',
-    '#title' => t('Private Key'),
-    '#default_value' => variable_get('recaptcha_private_key', ''),
+    '#title' => t('Secret key'),
+    '#default_value' => variable_get('recaptcha_secret_key', ''),
     '#maxlength' => 40,
-    '#description' => t('The public key given to you when you <a href="@url" target="_blank">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
+    '#description' => t('The secret key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
     '#required' => TRUE,
   );
+
+  $form['recaptcha_theme_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Theme settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['recaptcha_theme_settings']['recaptcha_theme'] = array(
+    '#type' => 'select',
+    '#title' => t('Theme'),
+    '#description' => t('Defines which theme to use for reCAPTCHA.'),
+    '#options' => array(
+      'light' => t('Light'),
+      'dark' => t('Dark'),
+    ),
+    '#default_value' => variable_get('recaptcha_theme', 'light'),
+    '#required' => TRUE,
+  );
+  $form['recaptcha_theme_settings']['recaptcha_tabindex'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Tabindex'),
+    '#description' => t('Set the <a href="@tabindex">tabindex</a> of the widget and challenge. If other elements in your page use tabindex, it should be set to make user navigation easier.', array('@tabindex' => 'http://www.w3.org/TR/html4/interact/forms.html#adef-tabindex')),
+    '#default_value' => variable_get('recaptcha_tabindex', ''),
+    '#size' => 4,
+  );
+
   return system_settings_form($form);
+}
+
+/**
+ * Validation function for recaptcha_admin_settings().
+ *
+ * @see recaptcha_admin_settings()
+ */
+function recaptcha_admin_settings_validate($form, &$form_state) {
+  $tabindex = $form_state['values']['recaptcha_tabindex'];
+  if (!empty($tabindex) && !is_numeric($tabindex)) {
+    form_set_error('recaptcha_tabindex', t('The tabindex must be an integer.'));
+  }
 }

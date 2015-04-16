@@ -9,7 +9,6 @@
  * Implements hook_menu().
  */
 function recaptcha_menu() {
-  $items = array();
   $items['admin/config/people/captcha/recaptcha'] = array(
     'title' => 'reCAPTCHA',
     'description' => 'Administer the Google No CAPTCHA reCAPTCHA web service.',
@@ -19,6 +18,7 @@ function recaptcha_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'recaptcha.admin.inc',
   );
+
   return $items;
 }
 
@@ -41,10 +41,11 @@ function recaptcha_captcha($op, $captcha_type = '') {
   switch ($op) {
     case 'list':
       return array('reCAPTCHA');
+
     case 'generate':
       $captcha = array();
       if ($captcha_type == 'reCAPTCHA') {
-        $recaptcha_site_key = variable_get('recaptcha_site_key', FALSE);
+        $recaptcha_site_key = variable_get('recaptcha_site_key', '');
 
         // Test if captcha can be used, falling back to Math if it is not
         // configured, the library won't load, or the server is down.
@@ -59,8 +60,13 @@ function recaptcha_captcha($op, $captcha_type = '') {
           '#type' => 'hidden',
           '#value' => 'Google no captcha',
         );
-        $captcha['form']['google_capture'] = array(
-          '#markup' => '<div class="g-recaptcha" data-sitekey="' . $recaptcha_site_key . '"></div>',
+        $attributes = array(
+          'class' => 'g-recaptcha',
+          'data-sitekey' => $recaptcha_site_key,
+          'data-theme' => variable_get('recaptcha_theme', 'light'),
+        );
+        $captcha['form']['recaptcha_widget'] = array(
+          '#markup' => '<div' . drupal_attributes($attributes) . '></div>',
         );
 
         drupal_add_js('https://www.google.com/recaptcha/api.js', array('defer' => TRUE, 'async' => TRUE, 'type' => 'external'));
@@ -73,12 +79,12 @@ function recaptcha_captcha($op, $captcha_type = '') {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution, $response, $element, $form_state) {
-  $recaptcha_private_key= variable_get('recaptcha_private_key', FALSE);
-  if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_private_key) || (!_recaptcha_load_library())) {
+  $recaptcha_secret_key= variable_get('recaptcha_secret_key', FALSE);
+  if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key) || (!_recaptcha_load_library())) {
     return FALSE;
   }
 
-  $reCaptcha = new ReCaptcha($recaptcha_private_key);
+  $reCaptcha = new ReCaptcha($recaptcha_secret_key);
   $resp = $reCaptcha->verifyResponse(
     $_SERVER['REMOTE_ADDR'],
     $_POST['g-recaptcha-response']
