@@ -53,7 +53,6 @@ function recaptcha_admin_settings() {
       'dark' => t('Dark'),
     ),
     '#default_value' => variable_get('recaptcha_theme', 'light'),
-    '#required' => TRUE,
   );
   $form['recaptcha_theme_settings']['recaptcha_type'] = array(
     '#type' => 'select',
