@@ -49,7 +49,7 @@ function recaptcha_admin_settings() {
     '#title' => t('Theme'),
     '#description' => t('Defines which theme to use for reCAPTCHA.'),
     '#options' => array(
-      'light' => t('Light'),
+      'light' => t('Light (default)'),
       'dark' => t('Dark'),
     ),
     '#default_value' => variable_get('recaptcha_theme', 'light'),
@@ -63,7 +63,7 @@ function recaptcha_admin_settings() {
       'image' => t('Image (default)'),
       'audio' => t('Audio'),
     ),
-    '#default_value' => variable_get('recaptcha_theme', 'image'),
+    '#default_value' => variable_get('recaptcha_type', 'image'),
   );
   $form['recaptcha_theme_settings']['recaptcha_tabindex'] = array(
     '#type' => 'textfield',
