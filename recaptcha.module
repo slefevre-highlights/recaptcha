@@ -87,6 +87,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
           'data-type' => variable_get('recaptcha_type', 'image'),
           'data-tabindex' => variable_get('recaptcha_tabindex', ''),
         );
+        $attributes = array_filter($attributes, 'strlen');
+
         $captcha['form']['recaptcha_widget'] = array(
           '#markup' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
         );
