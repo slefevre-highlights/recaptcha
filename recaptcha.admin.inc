@@ -31,6 +31,12 @@ function recaptcha_admin_settings() {
     '#description' => t('The secret key given to you when you <a href="@url">register for reCAPTCHA</a>.', array('@url' => 'https://www.google.com/recaptcha/admin#createsite')),
     '#required' => TRUE,
   );
+  $form['recaptcha_noscript'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable fallback for browsers with JavaScript disabled'),
+    '#default_value' => variable_get('recaptcha_noscript', 0),
+    '#description' => t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. Otherwise a compatibility layer will be added to the captcha to support non-js users.'),
+  );
 
   $form['recaptcha_theme_settings'] = array(
     '#type' => 'fieldset',
