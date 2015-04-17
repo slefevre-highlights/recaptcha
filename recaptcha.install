@@ -15,14 +15,6 @@ function recaptcha_requirements($phase) {
   if ($phase == 'runtime') {
     // Google library require that some functions are available. Otherwise the
     // http requests cannot issued to Google Webservice.
-    if (!ini_get('allow_url_fopen')) {
-      $requirements['recaptcha_allow_url_fopen'] = array(
-        'title' => $t('reCAPTCHA: allow_url_fopen'),
-        'description' => $t('Your server has <code>allow_url_fopen = Off</code> set and disallows the URL-aware fopen wrappers that enable accessing URL object like files. This is required to access remote files via http protocol.'),
-        'severity' => REQUIREMENT_ERROR,
-        'value' => $t('Disabled'),
-      );
-    }
     if (!function_exists('fsockopen')) {
       $requirements['recaptcha_fsockopen'] = array(
         'title' => $t('reCAPTCHA: fsockopen'),
