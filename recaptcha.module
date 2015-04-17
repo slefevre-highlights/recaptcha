@@ -5,6 +5,14 @@
  * Verifies if user is a human without necessity to solve a CAPTCHA.
  */
 
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/ReCaptcha.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestParameters.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/Response.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/Post.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/Socket.php';
+require_once dirname(__FILE__) . '/recaptcha-php/src/ReCaptcha/RequestMethod/SocketPost.php';
+
 /**
  * Implements hook_menu().
  */
@@ -51,7 +59,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
 
         // Test if captcha can be used, falling back to Math if it is not
         // configured, the library won't load, or the server is down.
-        if ((!$recaptcha_site_key) || (!_recaptcha_load_library())) {
+        if (!$recaptcha_site_key) {
           $args = func_get_args();
           return captcha_captcha('generate', 'Math', $args);
         }
@@ -104,21 +112,23 @@ function recaptcha_captcha($op, $captcha_type = '') {
  */
 function recaptcha_captcha_validation($solution, $response, $element, $form_state) {
   $recaptcha_secret_key= variable_get('recaptcha_secret_key', '');
-  if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key) || (!_recaptcha_load_library())) {
+  if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key)) {
     return FALSE;
   }
 
-  $reCaptcha = new ReCaptcha($recaptcha_secret_key);
-  $resp = $reCaptcha->verifyResponse(
-    ip_address(),
-    $_POST['g-recaptcha-response']
+  $recaptcha = new \ReCaptcha\ReCaptcha($recaptcha_secret_key);
+  $resp = $recaptcha->verify(
+    $_POST['g-recaptcha-response'],
+    ip_address()
   );
-  return $resp != NULL && $resp->success;
-}
 
-/**
- * Load the recaptcha library.
- */
-function _recaptcha_load_library() {
-  return module_load_include('php', 'recaptcha', 'ReCAPTCHA/php/recaptchalib');
+  if ($resp->isSuccess()) {
+    // Verified!
+    return TRUE;
+  }
+  else {
+    $errors = $resp->getErrorCodes();
+    // @todo: Add watchdog logging.
+  }
+  return FALSE;
 }

@@ -9,12 +9,6 @@
  * Form callback; administrative settings for Google No CAPTCHA.
  */
 function recaptcha_admin_settings() {
-  // Load the recaptcha library. Error if library does not load.
-  if (!_recaptcha_load_library()) {
-    drupal_set_message(t('Error loading recaptchalib.'), 'error');
-    return FALSE;
-  }
-
   $form['recaptcha_general_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('General settings'),
