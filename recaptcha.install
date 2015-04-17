@@ -6,6 +6,37 @@
  */
 
 /**
+ * Implements hook_requirements().
+ */
+function recaptcha_requirements($phase) {
+  $requirements = array();
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    // Google library require that some functions are available. Otherwise the
+    // http requests cannot issued to Google Webservice.
+    if (!ini_get('allow_url_fopen')) {
+      $requirements['recaptcha_allow_url_fopen'] = array(
+        'title' => $t('reCAPTCHA: allow_url_fopen'),
+        'description' => $t('Your server has <code>allow_url_fopen = Off</code> set and disallows the URL-aware fopen wrappers that enable accessing URL object like files. This is required to access remote files via http protocol.'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Disabled'),
+      );
+    }
+    if (!function_exists('fsockopen')) {
+      $requirements['recaptcha_fsockopen'] = array(
+        'title' => $t('reCAPTCHA: fsockopen'),
+        'description' => $t('Your server may has <code>disable_functions = fsockopen</code> set and this disallows PHP to open a socket connection. This is required to initiate a socket connection to remote servers.'),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => $t('Disabled'),
+      );
+    }
+  }
+
+  return $requirements;
+}
+
+/**
  * Implements hook_uninstall().
  */
 function recaptcha_uninstall() {
