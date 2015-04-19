@@ -111,7 +111,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
  * CAPTCHA Callback; Validates the reCAPTCHA code.
  */
 function recaptcha_captcha_validation($solution, $response, $element, $form_state) {
-  $recaptcha_secret_key= variable_get('recaptcha_secret_key', '');
+  $recaptcha_secret_key = variable_get('recaptcha_secret_key', '');
   if (empty($_POST['g-recaptcha-response']) || empty($recaptcha_secret_key)) {
     return FALSE;
   }
