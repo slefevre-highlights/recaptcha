@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides install, updated, and uninstall functions for recaptcha.
+ * Installation file for reCAPTCHA module.
  */
 
 /**
