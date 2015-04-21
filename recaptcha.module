@@ -108,8 +108,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
           '#value' => '',
           '#attributes' => array(
             'src' => url('https://www.google.com/recaptcha/api.js', array('query' => array('hl' => $language->language), 'absolute' => TRUE)),
-            'async' => TRUE,
-            'defer' => TRUE,
+            'async' => 'async',
+            'defer' => 'defer',
           ),
         );
         drupal_add_html_head($data, 'recaptcha_api');
