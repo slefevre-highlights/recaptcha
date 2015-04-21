@@ -67,7 +67,7 @@ function recaptcha_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Enable fallback for browsers with JavaScript disabled'),
     '#default_value' => variable_get('recaptcha_noscript', 0),
-    '#description' => t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. Otherwise a compatibility layer will be added to the captcha to support non-js users.'),
+    '#description' => t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. With this enabled, a compatibility layer will be added to the captcha to support non-js users.'),
   );
 
   return system_settings_form($form);
