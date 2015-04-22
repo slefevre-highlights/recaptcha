@@ -65,11 +65,6 @@ function recaptcha_update_7200() {
   variable_set('recaptcha_secret_key', $private_key);
   variable_del('recaptcha_private_key');
 
-  // Delete obsolete variables.
-  variable_del('recaptcha_server_status_check_interval');
-  variable_del('recaptcha_ajax_api');
-  variable_del('recaptcha_nocookies');
-
   // Migrate previous 1.x themes to 2.x as good as possible.
   $recaptcha_themes = array(
     'red' => 'light',
@@ -80,6 +75,27 @@ function recaptcha_update_7200() {
   );
   $recaptcha_theme = variable_get('recaptcha_theme', 'light');
   variable_set('recaptcha_theme', $recaptcha_themes[$recaptcha_theme]);
+
+  // Delete obsolete variables.
+  variable_del('recaptcha_ajax_api');
+  variable_del('recaptcha_nocookies');
+  variable_del('recaptcha_server_status_check_interval');
+
+  // Remove stale variables not cleaned up properly in previous releases.
+  variable_del('recaptcha_api_server');
+  variable_del('recaptcha_api_secure_server');
+  variable_del('recaptcha_secure_connection');
+  variable_del('recaptcha_verify_server');
+
+  // Mailhide module is not available, delete obsolete variables:
+  // - recaptcha_mailhide_public_key
+  // - recaptcha_mailhide_public_key_*
+  // - recaptcha_mailhide_private_key
+  // - recaptcha_mailhide_private_key_*
+  db_delete('variable')
+    ->condition('name', 'recaptcha_mailhide_%', 'LIKE')
+    ->execute();
+  cache_clear_all('variables', 'cache_bootstrap');
 
   return t('Migrated settings. You may need to create a new site key and secret key if it does not work.');
 }
