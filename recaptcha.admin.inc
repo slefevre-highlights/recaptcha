@@ -59,8 +59,8 @@ function recaptcha_admin_settings() {
   $form['recaptcha_widget_settings']['recaptcha_tabindex'] = array(
     '#type' => 'textfield',
     '#title' => t('Tabindex'),
-    '#description' => t('Set the <a href="@tabindex">tabindex</a> of the widget and challenge. If other elements in your page use tabindex, it should be set to make user navigation easier.', array('@tabindex' => 'http://www.w3.org/TR/html4/interact/forms.html#adef-tabindex')),
-    '#default_value' => variable_get('recaptcha_tabindex', ''),
+    '#description' => t('Set the <a href="@tabindex">tabindex</a> of the widget and challenge (Default = 0). If other elements in your page use tabindex, it should be set to make user navigation easier.', array('@tabindex' => 'http://www.w3.org/TR/html4/interact/forms.html#adef-tabindex')),
+    '#default_value' => variable_get('recaptcha_tabindex', 0),
     '#size' => 4,
   );
   $form['recaptcha_widget_settings']['recaptcha_noscript'] = array(
@@ -80,7 +80,7 @@ function recaptcha_admin_settings() {
  */
 function recaptcha_admin_settings_validate($form, &$form_state) {
   $tabindex = $form_state['values']['recaptcha_tabindex'];
-  if (!empty($tabindex) && !is_numeric($tabindex)) {
+  if (!is_numeric($tabindex)) {
     form_set_error('recaptcha_tabindex', t('The tabindex must be an integer.'));
   }
 }

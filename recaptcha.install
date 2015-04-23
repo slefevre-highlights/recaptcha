@@ -99,3 +99,16 @@ function recaptcha_update_7200() {
 
   return t('Migrated settings. You may need to create a new site key and secret key if it does not work.');
 }
+
+/**
+ * Default tabindex to 0.
+ */
+function recaptcha_update_7201() {
+  // Change an empty tabindex to value 0 for consistency with D8.
+  $recaptcha_tabindex = variable_get('recaptcha_tabindex', '');
+  if ($recaptcha_tabindex == '') {
+    variable_set('recaptcha_tabindex', 0);
+  }
+
+  return t('Empty tabindex has been upgraded to 0.');
+}
