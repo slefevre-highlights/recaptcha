@@ -72,6 +72,9 @@ function recaptcha_update_7200() {
     'blackglass' => 'dark',
     'clean' => 'light',
     'custom' => 'light',
+  );
+  // Upgrade from 6.x-2.x to 7.x-2.x
+  $recaptcha_themes += array(
     'light' => 'light',
     'dark' => 'dark',
   );
