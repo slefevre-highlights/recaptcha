@@ -72,6 +72,8 @@ function recaptcha_update_7200() {
     'blackglass' => 'dark',
     'clean' => 'light',
     'custom' => 'light',
+    'light' => 'light',
+    'dark' => 'dark',
   );
   $recaptcha_theme = variable_get('recaptcha_theme', 'light');
   variable_set('recaptcha_theme', $recaptcha_themes[$recaptcha_theme]);
