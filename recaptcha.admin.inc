@@ -8,7 +8,7 @@
 /**
  * Form callback; administrative settings for Google No CAPTCHA.
  */
-function recaptcha_admin_settings_form($form_state) {
+function recaptcha_admin_settings() {
   $form['recaptcha_general_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('General settings'),

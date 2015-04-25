@@ -21,7 +21,7 @@ function recaptcha_menu() {
     'title' => 'reCAPTCHA',
     'description' => 'Administer the Google No CAPTCHA reCAPTCHA web service.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('recaptcha_admin_settings_form'),
+    'page arguments' => array('recaptcha_admin_settings'),
     'access arguments' => array('administer recaptcha'),
     'type' => MENU_LOCAL_TASK,
     'file' => 'recaptcha.admin.inc',
