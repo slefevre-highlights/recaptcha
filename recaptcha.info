@@ -1,5 +1,5 @@
 name = reCAPTCHA
-description = Verifies if user is a human without necessity to solve a captcha
+description = Verifies if user is a human without necessity to solve a captcha.
 core = 7.x
 package = Spam control
 dependencies[] = captcha
