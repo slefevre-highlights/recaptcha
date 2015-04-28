@@ -6,6 +6,7 @@ dependencies[] = captcha
 configure = admin/config/people/captcha/recaptcha
 php = 5.3.2
 
+files[] = recaptcha.test
 files[] = recaptcha-php/src/ReCaptcha/ReCaptcha.php
 files[] = recaptcha-php/src/ReCaptcha/RequestMethod.php
 files[] = recaptcha-php/src/ReCaptcha/RequestParameters.php
