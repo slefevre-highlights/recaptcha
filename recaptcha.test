@@ -62,7 +62,7 @@ class ReCaptchaBasicTestCase extends DrupalWebTestCase {
     $edit['recaptcha_site_key'] = '';
     $edit['recaptcha_secret_key'] = '';
     $edit['recaptcha_tabindex'] = $this->randomName(2);
-    $this->drupalPost('admin/config/people/captcha/recaptcha', $edit, 'Save configuration');
+    $this->drupalPost('admin/config/people/captcha/recaptcha', $edit, t('Save configuration'));
 
     $this->assertRaw(t('Site key field is required.'), '[testReCaptchaConfiguration]: Empty site key detected.');
     $this->assertRaw(t('Secret key field is required.'), '[testReCaptchaConfiguration]: Empty secret key detected.');
@@ -72,7 +72,7 @@ class ReCaptchaBasicTestCase extends DrupalWebTestCase {
     $edit['recaptcha_site_key'] = $site_key;
     $edit['recaptcha_secret_key'] = $secret_key;
     $edit['recaptcha_tabindex'] = 0;
-    $this->drupalPost('admin/config/people/captcha/recaptcha', $edit, 'Save configuration');
+    $this->drupalPost('admin/config/people/captcha/recaptcha', $edit, t('Save configuration'));
 
     $this->assertNoRaw(t('Site key field is required.'), '[testReCaptchaConfiguration]: Site key was not empty.');
     $this->assertNoRaw(t('Secret key field is required.'), '[testReCaptchaConfiguration]: Secret key was not empty.');
