@@ -11,7 +11,7 @@ class ReCaptchaBasicTestCase extends DrupalWebTestCase {
     return array(
       'name' => t('reCAPTCHA basic tests'),
       'description' => t('Test basic functionality of reCAPTCHA module.'),
-      'group' => t('CAPTCHA'),
+      'group' => t('reCAPTCHA'),
       'dependencies' => array('captcha'),
     );
   }
@@ -74,9 +74,9 @@ class ReCaptchaBasicTestCase extends DrupalWebTestCase {
     $edit['recaptcha_tabindex'] = 0;
     $this->drupalPost('admin/config/people/captcha/recaptcha', $edit, 'Save configuration');
 
-    $this->assertNoRaw(t('Site key field is required.'), '[testReCaptchaConfiguration]: Invalid value for site key detected.');
-    $this->assertNoRaw(t('Secret key field is required.'), '[testReCaptchaConfiguration]: Invalid value for secret key detected.');
-    $this->assertNoRaw(t('The tabindex must be an integer.'), '[testReCaptchaConfiguration]: Invalid value for tab index detected.');
+    $this->assertNoRaw(t('Site key field is required.'), '[testReCaptchaConfiguration]: Site key was not empty.');
+    $this->assertNoRaw(t('Secret key field is required.'), '[testReCaptchaConfiguration]: Secret key was not empty.');
+    $this->assertNoRaw(t('The tabindex must be an integer.'), '[testReCaptchaConfiguration]: Tab index had a valid input.');
 
     $this->drupalLogout();
   }
@@ -119,13 +119,13 @@ class ReCaptchaBasicTestCase extends DrupalWebTestCase {
 
     // Try to log in, which should fail.
     $edit = array(
-      'name' => $user->name,
-      'pass' => $user->pass_raw,
+      'name' => $this->normal_user->name,
+      'pass' => $this->normal_user->pass_raw,
       'captcha_response' => '?',
     );
     $this->drupalPost('user', $edit, t('Log in'));
     // Check for error message.
-    $this->assertText(t(CAPTCHA_WRONG_RESPONSE_ERROR_MESSAGE), 'CAPTCHA should block user login form', 'CAPTCHA');
+    $this->assertText(t('The answer you entered for the CAPTCHA was not correct.'), 'CAPTCHA should block user login form', 'CAPTCHA');
 
     // And make sure that user is not logged in: check for name and password fields on ?q=user
     $this->drupalGet('user');
