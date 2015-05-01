@@ -119,7 +119,8 @@ function recaptcha_captcha($op, $captcha_type = '') {
         $attributes = array_filter($attributes);
 
         $captcha['form']['recaptcha_widget'] = array(
-          '#markup' => '<div' . drupal_attributes($attributes) . '></div>' . $noscript,
+          '#markup' => '<div' . drupal_attributes($attributes) . '></div>',
+          '#suffix' =>  $noscript,
         );
 
         // @todo: #1664602: D7 does not yet support "async" in drupal_add_js().
