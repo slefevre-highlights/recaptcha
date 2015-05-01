@@ -46,11 +46,17 @@ function recaptcha_uninstall() {
  */
 function recaptcha_update_7200() {
   // Migrate the public key to site key.
-  $public_key = variable_get('recaptcha_public_key', '');
+  // Upgrade from 6.x-2.x to 7.x-2.x
+  $site_key = variable_get('recaptcha_site_key', '');
+  // Upgrade from 7.x-1.x to 7.x-2.x
+  $public_key = variable_get('recaptcha_public_key', $site_key);
   variable_set('recaptcha_site_key', $public_key);
   variable_del('recaptcha_public_key');
 
-  $private_key = variable_get('recaptcha_private_key', '');
+  // Upgrade from 6.x-2.x to 7.x-2.x
+  $secret_key = variable_get('recaptcha_secret_key', '');
+  // Upgrade from 7.x-1.x to 7.x-2.x
+  $private_key = variable_get('recaptcha_private_key', $secret_key);
   variable_set('recaptcha_secret_key', $private_key);
   variable_del('recaptcha_private_key');
 
