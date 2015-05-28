@@ -37,6 +37,7 @@ function recaptcha_uninstall() {
   variable_del('recaptcha_secret_key');
   variable_del('recaptcha_theme');
   variable_del('recaptcha_type');
+  variable_del('recaptcha_size');
   variable_del('recaptcha_tabindex');
   variable_del('recaptcha_noscript');
 }
