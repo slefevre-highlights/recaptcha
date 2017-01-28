@@ -108,6 +108,11 @@ function recaptcha_captcha($op, $captcha_type = '') {
             'data-size' => variable_get('recaptcha_size', ''),
             'data-tabindex' => variable_get('recaptcha_tabindex', 0),
           );
+
+          if ( strlen($data_callback = variable_get('recaptcha_data_callback')) ) {
+             $attributes['data-callback' = $data_callback;
+          }
+
           // Filter out empty tabindex/size.
           $attributes = array_filter($attributes);
 
