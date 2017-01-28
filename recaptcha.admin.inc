@@ -80,6 +80,15 @@ function recaptcha_admin_settings() {
     '#description' => t('If JavaScript is a requirement for your site, you should <strong>not</strong> enable this feature. With this enabled, a compatibility layer will be added to the captcha to support non-js users.'),
   );
 
+  // allow the user to define a javascript callback to pass to recaptcha
+  $form['recaptcha_data_callback'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Javascript Completion Callback',
+    '#default_value' => variable_get('recaptcha_data_callback'),
+    '#description' => t('The name of a javascript function that will be called when the recaptcha is successfully completed. This will not include any javascript; you must make sure that the function named here is included in the approprate pages with the form(s). Only enter the name of a function, not an actual function call or other javascript code.'),
+    '#maxlength' => 256,
+  );
+
   return system_settings_form($form);
 }
 
