@@ -110,7 +110,7 @@ function recaptcha_captcha($op, $captcha_type = '') {
           );
 
           if ( strlen($data_callback = variable_get('recaptcha_data_callback')) ) {
-             $attributes['data-callback' = check_plain($data_callback);
+             $attributes['data-callback'] = check_plain($data_callback);
           }
 
           // Filter out empty tabindex/size.
