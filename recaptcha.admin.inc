@@ -104,7 +104,7 @@ function recaptcha_admin_settings_validate($form, &$form_state) {
   }
 
   if ( strlen($form_state['values']['recaptcha_data_callback']) ) {
-    if ( ! preg_match('/^[a-zA-Z]*$/',$form_state['values']['recaptcha_data_callback']) ) {
+    if ( ! preg_match('/^[a-zA-Z_]*$/',$form_state['values']['recaptcha_data_callback']) ) {
       form_set_error('recaptcha_data_callback', t('The value you entered is not a valid javascript function name.'));
     }
   }
